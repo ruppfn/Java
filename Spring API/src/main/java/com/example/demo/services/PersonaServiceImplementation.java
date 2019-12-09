@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,11 @@ public class PersonaServiceImplementation implements PersonaService{
 	@Override
 	public void delete(Integer id){
 		repository.deleteById(id);
+	}
+	
+	@Override
+	public Optional<Persona> findById(Integer id) {
+		return repository.findById(id);
 	}
 	
 }
