@@ -43,7 +43,6 @@ public class MainController {
 		return ResponseEntity.ok(personaService.listar());
 	}
 	
-	@GetMapping(produces = "application/json")
 	@RequestMapping("/user")
 	public ResponseEntity validateLogin() {
 		return ResponseEntity.ok().build();
