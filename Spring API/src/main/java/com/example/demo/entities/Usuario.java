@@ -1,83 +1,85 @@
 package com.example.demo.entities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.example.demo.services.UsuarioServiceImplementation;
-
 @Entity
-public class Usuario implements UserDetails{
-
-	@Id
+@Table(name="Usuarios")
+public class Usuario{
+	
 	@NotEmpty
+	@Id
+	@Column(name="user_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	
+	@NotEmpty
+	@Column
 	private String username;
 	
 	@NotEmpty
+	@Column
 	private String password;
 	
-	private String authority;
+	@NotEmpty
+	@Column
+	private int active;
 	
-	List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-	
-	@Autowired
-	private UsuarioServiceImplementation userService;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name= "role_id"))
+	private Set<Role> roles;
 	
 	public Usuario() {
-		
-	}
-	
-	public Usuario(String username, String password) {
-		this.username = username;
-		this.password = 
-	}
-	
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
+    public Usuario(Usuario users) {
+        this.active = users.getActive();
+        this.roles = users.getRoles();
+        this.username = users.getUsername();
+        this.id = users.getId();
+        this.password = users.getPassword();
+    }
 
-	@Override
-	public String getPassword() {
-		return password;
+	public int getId() {
+		return id;
 	}
 
-	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getUsername() {
 		return username;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+	public String getPassword() {
+		return password;
 	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
+	public int getActive() {
+		return active;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 	
 }
