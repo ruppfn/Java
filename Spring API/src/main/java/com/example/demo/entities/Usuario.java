@@ -23,9 +23,7 @@ public class Usuario{
 	@Column
 	private String password;
 	
-	@NotEmpty
-	@Column
-	private int active;
+	private String token;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name= "role_id"))
@@ -35,7 +33,7 @@ public class Usuario{
     }
 
     public Usuario(Usuario users) {
-        this.active = users.getActive();
+        this.token = users.getToken();
         this.roles = users.getRoles();
         this.username = users.getUsername();
         this.id = users.getId();
@@ -66,12 +64,12 @@ public class Usuario{
 		this.password = password;
 	}
 
-	public int getActive() {
-		return active;
+	public String getToken() {
+		return token;
 	}
 
-	public void setActive(int active) {
-		this.active = active;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public Set<Role> getRoles() {

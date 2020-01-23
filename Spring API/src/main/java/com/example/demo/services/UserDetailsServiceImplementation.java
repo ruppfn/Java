@@ -31,6 +31,12 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(user));
 	}
 	
+	public Optional<Usuario> findByUsername(String username){
+		return userRepository.findByUsername(username);
+	}
+	
+	
+	
 	private static Collection<? extends GrantedAuthority> getAuthorities(Usuario user){
 		String[] userRoles = user.getRoles().stream().map((role) -> role.getRole() ).toArray(String[]::new);
 		Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);

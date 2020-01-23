@@ -2,19 +2,22 @@ package com.example.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.demo.entities.Persona;
 import com.example.demo.services.PersonaServiceImplementation;
 
-@Controller
+@RestController
 @RequestMapping(value="/persona", produces="application/json")
 public class MainController {
 	
@@ -26,7 +29,6 @@ public class MainController {
 		return ResponseEntity.ok(personaService.add(persona));	
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(path="/{id}")
 	public ResponseEntity<?> deletePersona(@PathVariable Integer id){
 		if(!personaService.findById(id).isPresent()) {
@@ -36,7 +38,6 @@ public class MainController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PreAuthorize("hasAnyRole('USER')")
 	@GetMapping("/")
 	public ResponseEntity<Iterable<Persona>> getAllPersonas(){
 		return ResponseEntity.ok(personaService.listar());
@@ -45,5 +46,16 @@ public class MainController {
 	@RequestMapping("/user")
 	public ResponseEntity<?> validateLogin() {
 		return ResponseEntity.ok().build();
+	}
+	
+	public boolean roleExist(String role) {
+		SecurityContext context = SecurityContextHolder.getContext();
+	    Authentication authentication = context.getAuthentication();
+	    for (GrantedAuthority auth : authentication.getAuthorities()) {
+	    	System.out.println(auth.getAuthority().toString());
+	        if (role.equals(auth.getAuthority()))
+	            return true;
+	    }
+	    return false;
 	}
 }
