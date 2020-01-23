@@ -47,15 +47,5 @@ public class MainController {
 	public ResponseEntity<?> validateLogin() {
 		return ResponseEntity.ok().build();
 	}
-	
-	public boolean roleExist(String role) {
-		SecurityContext context = SecurityContextHolder.getContext();
-	    Authentication authentication = context.getAuthentication();
-	    for (GrantedAuthority auth : authentication.getAuthorities()) {
-	    	System.out.println(auth.getAuthority().toString());
-	        if (role.equals(auth.getAuthority()))
-	            return true;
-	    }
-	    return false;
-	}
+
 }
