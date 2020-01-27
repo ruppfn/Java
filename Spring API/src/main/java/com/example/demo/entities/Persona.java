@@ -5,13 +5,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.services.UserDetailsServiceImplementation;
+
 @Entity
 
 public class Persona {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
+	@GenericGenerator(name = "UseExistingIdOtherwiseGenerateUsingIdentity", strategy = "com.example.demo.repositories.UseExistingIdOtherwiseGenerateUsingIdentity")
+	@GeneratedValue(generator = "UseExistingIdOtherwiseGenerateUsingIdentity")
+	private Integer id;
 	
 	private String firstName;
 	
@@ -20,7 +26,7 @@ public class Persona {
 	private String email;
 	
 	private String address;
-
+	
 	public Persona(String firstName, String lastName, String email, String address){
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -34,7 +40,8 @@ public class Persona {
 	
 	@Override
 	public String toString() {
-		return id + "" + lastName + ", " + firstName;
+		return "{ 'firstName': " + firstName + ", 'lastName': " + lastName + ", 'email': " + email + 
+				", 'address': " + address + "}";
 	}
 
 	public Integer getId() {
