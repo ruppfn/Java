@@ -27,15 +27,18 @@ public class PersonaServiceImplementation implements PersonaService{
 	public Iterable<Persona> listar() {
 		return repository.findAll();
 	}
+	
+	@Override
+	public Optional<Persona> findByFirstName(String firstName){
+		return repository.findByFirstName(firstName);
+	}
 
+	
+	
 	@Override
 	public Persona add(String json) {
-		Gson gson = new Gson();
-		Persona result = gson.fromJson(json, Persona.class);
-		if(result.getFirstName() != null) {
-			return repository.save(result);	
-		}
-		return result;
+		Persona result = getPersonaFromJson(json);
+		return result.isNull()? repository.save(result) : new Persona();
 	}
 	
 	public Persona add(Persona persona) {
@@ -50,6 +53,12 @@ public class PersonaServiceImplementation implements PersonaService{
 	@Override
 	public Optional<Persona> findById(Integer id) {
 		return repository.findById(id);
+	}
+	
+	public Persona getPersonaFromJson(String json) {
+		Gson gson = new Gson();
+		Persona result = gson.fromJson(json, Persona.class);
+		return result.isNull() ? result : new Persona();
 	}
 	
 	public int getMaxId() {

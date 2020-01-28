@@ -52,10 +52,4 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 		}
 	}
 	
-	public int getMaxId() {
-		return userRepository.getMaxID() == 0 ? 0 : userRepository.getMaxID()+1;
-	}
-	
-	
-
 }

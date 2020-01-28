@@ -8,8 +8,11 @@ import com.example.demo.entities.Persona;
 
 @Service
 public interface PersonaService {
+	
 	Iterable<Persona> listar();
 	Persona add(String json);
 	void delete(Integer id);
 	Optional<Persona> findById(Integer id);
+	Optional<Persona> findByFirstName(String firstName);
+	
 }

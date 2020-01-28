@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class UserController {
 	private UserDetailsServiceImplementation userService;
 	
 	@PostMapping
-	public ResponseEntity<Usuario> login(@RequestParam("user") String username, @RequestParam("password") String pwd){
+	public ResponseEntity<Usuario> login(@RequestHeader("user") String username, @RequestHeader("password") String pwd){
 		Optional<Usuario> usuario = userService.findByUsername(username);
 		Usuario user;
 		if(usuario.isPresent()) {
@@ -65,23 +66,24 @@ public class UserController {
 						.map(GrantedAuthority::getAuthority)
 						.collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
+				.setExpiration(new Date(System.currentTimeMillis() + 3600000))
 				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
 				.compact();		
 		
 		return "Prefix " + token;
 	}
 	
-	@PostMapping("new")
-	public ResponseEntity<?> addNewUser(@RequestBody Usuario user){
+	@PostMapping("/new")
+	public ResponseEntity<?> addNewUser(@RequestHeader("user") String username, @RequestHeader String password){
 		Set<Role> roles = new HashSet<Role>();
 		Role role = new Role();
 		role.setRoleId(2);
 		role.setRole("USER");
 		roles.add(role);
-		
-		int id = userService.getMaxId();
-		user.setId(id);
+
+		Usuario user = new Usuario();
+		user.setUsername(username);
+		user.setPassword(password);
 		user.setRoles(roles);
 		
 		userService.createNewUser(user);

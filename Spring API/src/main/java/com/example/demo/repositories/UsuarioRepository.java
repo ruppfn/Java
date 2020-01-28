@@ -25,7 +25,4 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Integer>{
 	@SuppressWarnings("unchecked")
 	public Usuario save(Usuario user);
 	
-	@Procedure(name = "OBTENER_ID")
-	public int getMaxID();
-	
 }

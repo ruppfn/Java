@@ -5,18 +5,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.example.demo.services.UserDetailsServiceImplementation;
-
 @Entity
-
 public class Persona {
 
 	@Id
-	@GenericGenerator(name = "UseExistingIdOtherwiseGenerateUsingIdentity", strategy = "com.example.demo.repositories.UseExistingIdOtherwiseGenerateUsingIdentity")
-	@GeneratedValue(generator = "UseExistingIdOtherwiseGenerateUsingIdentity")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
 	private String firstName;
@@ -36,6 +29,14 @@ public class Persona {
 
 	public Persona(){
 
+	}
+	
+	public boolean isNull() {
+		if(this.firstName == null || this.lastName == null || this.email == null || this.address == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override

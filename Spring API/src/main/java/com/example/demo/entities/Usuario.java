@@ -6,10 +6,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name="Usuarios")
+@Table(name = "usuarios")
 public class Usuario{
 	
-	@NotEmpty
+	
 	@Id
 	@Column(name="user_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +25,7 @@ public class Usuario{
 	
 	private String token;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name= "role_id"))
 	private Set<Role> roles;
 	
