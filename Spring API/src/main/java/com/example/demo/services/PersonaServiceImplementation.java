@@ -38,7 +38,10 @@ public class PersonaServiceImplementation implements PersonaService{
 	@Override
 	public Persona add(String json) {
 		Persona result = getPersonaFromJson(json);
-		return result.isNull()? repository.save(result) : new Persona();
+		if(result.getId().equals(0)) {
+			result.setId(null);
+		}
+		return result.isNull()? new Persona() : repository.save(result);
 	}
 	
 	public Persona add(Persona persona) {
@@ -58,7 +61,7 @@ public class PersonaServiceImplementation implements PersonaService{
 	public Persona getPersonaFromJson(String json) {
 		Gson gson = new Gson();
 		Persona result = gson.fromJson(json, Persona.class);
-		return result.isNull() ? result : new Persona();
+		return result.isNull() ? new Persona() : result;
 	}
 	
 	public int getMaxId() {

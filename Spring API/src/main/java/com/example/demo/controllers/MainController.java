@@ -66,9 +66,9 @@ public class MainController {
 	@PutMapping(consumes = "application/json", path = "{id}")
 	public ResponseEntity<Persona> modifyPersona(@RequestBody String persona, @PathVariable Integer id){
 		Optional<Persona> optional = personaService.findById(id);
-		if(optional.isPresent()) {
+		Persona fromJson = personaService.getPersonaFromJson(persona);
+		if(optional.isPresent() && !fromJson.isNull()) {
 			Persona saved = optional.get();
-			Persona fromJson = personaService.getPersonaFromJson(persona);
 			
 			saved.setFirstName(fromJson.getFirstName());
 			saved.setLastName(fromJson.getLastName());
