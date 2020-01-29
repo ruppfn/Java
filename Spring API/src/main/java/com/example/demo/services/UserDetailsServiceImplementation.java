@@ -1,7 +1,11 @@
 package com.example.demo.services;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,8 +14,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.entities.Role;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.UsuarioRepository;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class UserDetailsServiceImplementation implements UserDetailsService {
@@ -50,6 +59,29 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 		} else {
 			return userRepository.save(user);
 		}
+	}
+	
+	public String getJWTToken(Usuario user){
+		String secretKey = "secretKey";
+		String roles = "";
+		for (Role role : user.getRoles()) {
+			roles = roles.length() > 1 ? role.getRole() : roles + "," + role.getRole();
+		}
+		
+		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+		
+		String token = Jwts.builder()
+				.setId("TestJWT")
+				.setSubject(user.getUsername())
+				.claim("authorities", grantedAuthorities.stream()
+						.map(GrantedAuthority::getAuthority)
+						.collect(Collectors.toList()))
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 3600000))
+				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
+				.compact();		
+		
+		return "Prefix " + token;
 	}
 	
 }
