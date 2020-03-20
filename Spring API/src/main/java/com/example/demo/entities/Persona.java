@@ -1,23 +1,25 @@
 package com.example.demo.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Persona {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(updatable=false)
 	private Integer id;
-	
+
+	@Column(name="FIRST_NAME", nullable = false)
 	private String firstName;
-	
+
+	@Column(name="LAST_NAME", nullable = false)
 	private String lastName;
-	
+
+	@Column
 	private String email;
-	
+
+	@Column
 	private String address;
 	
 	public Persona(String firstName, String lastName, String email, String address){

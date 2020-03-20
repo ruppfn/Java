@@ -8,21 +8,21 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "usuarios")
 public class Usuario{
-	
-	
+
+
 	@Id
-	@Column(name="user_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(updatable=false)
 	private int id;
 	
 	@NotEmpty
-	@Column
+	@Column(nullable = false)
 	private String username;
 	
 	@NotEmpty
-	@Column
+	@Column(nullable = false)
 	private String password;
-	
+
 	private String token;
 	
 	@ManyToMany

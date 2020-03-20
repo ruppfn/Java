@@ -54,7 +54,7 @@ public class UserController {
 		user.setRoles(roles);
 		
 		userService.createNewUser(user);
-		
+
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 							.path("/{id}")
 							.buildAndExpand(user.getId())
